@@ -1,35 +1,35 @@
 services:
-  postgres:
-    image: postgres:16
-    restart: always
-    environment:
-      - POSTGRES_USER=medplum
-      - POSTGRES_PASSWORD=medplum
-    command:
-      # We use command line args instead of a postgres.conf to avoid additional setup out of the box
-      - "postgres"
-      - "-c"
-      - "listen_addresses=*"
-      - "-c"
-      - "statement_timeout=60000"
-      - "-c"
-      - "default_transaction_isolation=REPEATABLE READ"
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U medplum"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # postgres:
+  #   image: postgres:16
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=medplum
+  #     - POSTGRES_PASSWORD=medplum
+  #   command:
+  #     # We use command line args instead of a postgres.conf to avoid additional setup out of the box
+  #     - "postgres"
+  #     - "-c"
+  #     - "listen_addresses=*"
+  #     - "-c"
+  #     - "statement_timeout=60000"
+  #     - "-c"
+  #     - "default_transaction_isolation=REPEATABLE READ"
+  #   ports:
+  #     - "5432:5432"
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U medplum"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
   redis:
     image: redis:7
     restart: always
-    command: redis-server --requirepass medplum
+    # command: redis-server --requirepass medplum
     ports:
       - "6379:6379"
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "medplum", "ping"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -64,15 +64,15 @@ services:
       MEDPLUM_APP_BASE_URL: "http://localhost:3000/"
       MEDPLUM_STORAGE_BASE_URL: "http://localhost:8103/storage/"
 
-      MEDPLUM_DATABASE_HOST: "postgres"
+      MEDPLUM_DATABASE_HOST: "carefront-medplum-db.cluster-cktcxkxuvcgl.us-east-1.rds.amazonaws.com"
       MEDPLUM_DATABASE_PORT: 5432
-      MEDPLUM_DATABASE_DBNAME: "medplum"
+      MEDPLUM_DATABASE_DBNAME: "carefront"
       MEDPLUM_DATABASE_USERNAME: "medplum"
       MEDPLUM_DATABASE_PASSWORD: "medplum"
 
       MEDPLUM_REDIS_HOST: "redis"
       MEDPLUM_REDIS_PORT: 6379
-      MEDPLUM_REDIS_PASSWORD: "medplum"
+      # MEDPLUM_REDIS_PASSWORD: "medplum"
 
       MEDPLUM_BINARY_STORAGE: "file:./binary/"
       MEDPLUM_SIGNING_KEY_ID: "my-key-id"
@@ -81,8 +81,8 @@ services:
       MEDPLUM_SUPPORT_EMAIL: '\"Medplum\" <support@medplum.com>'
       MEDPLUM_GOOGLE_CLIENT_ID: "397236612778-c0b5tnjv98frbo1tfuuha5vkme3cmq4s.apps.googleusercontent.com"
       MEDPLUM_GOOGLE_CLIENT_SECRET: ""
-      MEDPLUM_RECAPTCHA_SITE_KEY: "6LfHdsYdAAAAAC0uLnnRrDrhcXnziiUwKd8VtLNq"
-      MEDPLUM_RECAPTCHA_SECRET_KEY: "6LfHdsYdAAAAAH9dN154jbJ3zpQife3xaiTvPChL"
+
+
       MEDPLUM_ADMIN_CLIENT_ID: "2a4b77f2-4d4e-43c6-9b01-330eb5ca772f"
       MEDPLUM_MAX_JSON_SIZE: "1mb"
       MEDPLUM_MAX_BATCH_SIZE: "50mb"
