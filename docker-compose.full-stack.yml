@@ -39,8 +39,8 @@ services:
     image: medplum/medplum-server:latest
     restart: always
     depends_on:
-      postgres:
-        condition: service_healthy
+      # postgres:
+      #   condition: service_healthy
       redis:
         condition: service_healthy
     ports:
@@ -49,15 +49,15 @@ services:
       # Conditionally define a volume for a `medplum.config.json` if one is specified by the MEDPLUM_CONFIG_PATH env var
       - ${MEDPLUM_CONFIG_PATH:-./medplum.config.json}:/usr/src/medplum/packages/server/medplum.config.json
     entrypoint: >
-      sh -c "
-      if [ -n '${MEDPLUM_CONFIG_PATH}' ]; then
-        echo 'Config file found, running with custom config'
+      sh -c '
+      if [ -n "${MEDPLUM_CONFIG_PATH}" ]; then
+        echo "Config file found, running with custom config"
         node --require ./packages/server/dist/otel/instrumentation.js packages/server/dist/index.js file:$MEDPLUM_CONFIG_PATH
       else
-        echo 'No config file found, running with default env settings'
+        echo "No config file found, running with default env settings"
         node --require ./packages/server/dist/otel/instrumentation.js packages/server/dist/index.js env
       fi
-      "
+      '
     environment:
       MEDPLUM_PORT: 8103
       MEDPLUM_BASE_URL: "http://localhost:8103/"
