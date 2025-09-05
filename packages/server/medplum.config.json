@@ -24,8 +24,8 @@
   "database": {
     "host": "carefront-medplum-db.cluster-cktcxkxuvcgl.us-east-1.rds.amazonaws.com",
     "port": 5432,
-    "dbname": "carefront",
-    "username": "medplum",
+    "database": "carefront",
+    "user": "medplum",
     "password": "medplum"
   },
   "redis": {
